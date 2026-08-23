@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#123e35">
+  <meta name="description" content="Acompanhamento de sublíderes, apoiadores e movimentações da Coordenação Política.">
+  <title>Coordenação Política</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <main id="auth-view" class="auth-layout">
+    <section class="auth-brand">
+      <div class="brand-mark">CP</div>
+      <p class="eyebrow">GESTÃO 2026</p>
+      <h1>Coordenação<br>Política</h1>
+      <p>Dados organizados, metas visíveis e decisões acompanhadas em tempo real.</p>
+      <div class="privacy-note">🔒 Acesso restrito à coordenação</div>
+    </section>
+    <section class="auth-card">
+      <div>
+        <p class="eyebrow">ÁREA SEGURA</p>
+        <h2 id="auth-title">Entrar no painel</h2>
+        <p class="muted">Use seu e-mail e sua senha de acesso.</p>
+      </div>
+      <form id="auth-form" class="form-stack">
+        <label>Nome completo
+          <input id="auth-name" autocomplete="name" placeholder="Seu nome" hidden>
+        </label>
+        <label>E-mail
+          <input id="auth-email" type="email" autocomplete="email" placeholder="seuemail@exemplo.com" required>
+        </label>
+        <label>Senha
+          <input id="auth-password" type="password" autocomplete="current-password" minlength="8" placeholder="Mínimo de 8 caracteres" required>
+        </label>
+        <button class="btn btn-primary" type="submit" id="auth-submit">Entrar</button>
+      </form>
+      <button id="toggle-auth" class="link-button" type="button">Primeiro acesso? Criar conta</button>
+      <p id="auth-help" class="form-help">O primeiro usuário cadastrado será o proprietário da coordenação.</p>
+    </section>
+  </main>
+
+  <div id="app-view" class="app-shell" hidden>
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <div class="brand-mark small">CP</div>
+        <div><strong>Coordenação</strong><span>Política 2026</span></div>
+      </div>
+      <nav id="main-nav" aria-label="Navegação principal">
+        <button class="nav-item active" data-section="painel">▦ <span>Painel geral</span></button>
+        <button class="nav-item" data-section="sublideres">♟ <span>Sublíderes</span></button>
+        <button class="nav-item" data-section="apoiadores">◉ <span>Apoiadores</span></button>
+        <button class="nav-item" data-section="movimentacoes">↗ <span>Movimentações</span></button>
+        <button class="nav-item" data-section="relatorios">▥ <span>Relatórios e checagens</span></button>
+      </nav>
+      <div class="sidebar-footer">
+        <div id="user-name">Usuário</div>
+        <small id="user-role">Acesso autorizado</small>
+        <button id="logout-btn" class="link-button light">Sair</button>
+      </div>
+    </aside>
+
+    <div class="workspace">
+      <header class="topbar">
+        <button id="menu-btn" class="icon-button" aria-label="Abrir menu">☰</button>
+        <div>
+          <p class="eyebrow">ACOMPANHAMENTO POLÍTICO</p>
+          <h2 id="page-title">Painel geral</h2>
+        </div>
+        <div class="top-actions">
+          <span id="sync-status" class="sync-status">● Sincronizado</span>
+          <button id="refresh-btn" class="btn btn-ghost">Atualizar</button>
+        </div>
+      </header>
+
+      <main class="content">
+        <section id="section-painel" class="page-section active">
+          <div class="section-heading">
+            <div><h3>Visão da coordenação</h3><p>Progresso consolidado dos três candidatos.</p></div>
+          </div>
+          <div id="candidate-cards" class="candidate-grid"></div>
+          <div class="dashboard-grid">
+            <article class="panel chart-panel"><div class="panel-title"><h3>Sublíderes por candidato</h3><span>Meta x cadastrado</span></div><canvas id="leaders-chart"></canvas></article>
+            <article class="panel chart-panel"><div class="panel-title"><h3>Situação dos apoios</h3><span>Consolidado</span></div><canvas id="support-chart"></canvas></article>
+          </div>
+          <div class="dashboard-grid">
+            <article class="panel"><div class="panel-title"><h3>Checagens importantes</h3><button class="link-button" data-go="relatorios">Ver todas</button></div><div id="checks-summary" class="check-list"></div></article>
+            <article class="panel"><div class="panel-title"><h3>Movimentações recentes</h3><button class="link-button" data-go="movimentacoes">Abrir agenda</button></div><div id="recent-movements" class="activity-list"></div></article>
+          </div>
+        </section>
+
+        <section id="section-sublideres" class="page-section">
+          <div class="section-heading"><div><h3>Cadastro de sublíderes</h3><p>Uma pessoa pode apoiar Jender e apenas um deputado federal.</p></div><button class="btn btn-primary" data-open="leader-dialog">+ Novo sublíder</button></div>
+          <div class="toolbar"><input id="leader-search" type="search" placeholder="Buscar por nome, bairro ou telefone"><select id="leader-filter"><option value="">Todos os vínculos</option><option value="Jender Lobato">Jender Lobato</option><option value="Dalmir Salazar">Dalmir Salazar</option><option value="Pauderney Avelino">Pauderney Avelino</option><option value="pendente">Pendências</option></select></div>
+          <div class="table-wrap"><table><thead><tr><th>Sublíder</th><th>Bairro</th><th>Jender</th><th>Deputado federal</th><th>Apoiadores</th><th>Checagem</th><th></th></tr></thead><tbody id="leaders-table"></tbody></table></div>
+        </section>
+
+        <section id="section-apoiadores" class="page-section">
+          <div class="section-heading"><div><h3>Apoiadores</h3><p>Registro nominal e intenção de apoio por candidato.</p></div><button class="btn btn-primary" data-open="supporter-dialog">+ Novo apoiador</button></div>
+          <div class="toolbar"><input id="supporter-search" type="search" placeholder="Buscar apoiador"><select id="supporter-leader-filter"><option value="">Todos os sublíderes</option></select></div>
+          <div class="table-wrap"><table><thead><tr><th>Apoiador</th><th>Sublíder</th><th>Bairro</th><th>Apoios</th><th>Situação</th><th></th></tr></thead><tbody id="supporters-table"></tbody></table></div>
+        </section>
+
+        <section id="section-movimentacoes" class="page-section">
+          <div class="section-heading"><div><h3>Movimentações</h3><p>Visitas, reuniões, ligações, eventos e outras ações.</p></div><button class="btn btn-primary" data-open="movement-dialog">+ Nova movimentação</button></div>
+          <div class="toolbar"><input id="movement-search" type="search" placeholder="Buscar descrição ou local"><select id="movement-status-filter"><option value="">Todos os status</option><option value="planejada">Planejadas</option><option value="realizada">Realizadas</option><option value="cancelada">Canceladas</option></select></div>
+          <div class="table-wrap"><table><thead><tr><th>Data</th><th>Tipo</th><th>Sublíder</th><th>Candidato</th><th>Descrição</th><th>Status</th><th></th></tr></thead><tbody id="movements-table"></tbody></table></div>
+        </section>
+
+        <section id="section-relatorios" class="page-section">
+          <div class="section-heading"><div><h3>Relatórios e checagens</h3><p>Identifique pendências e acompanhe o cumprimento das metas.</p></div><div><button id="export-btn" class="btn btn-ghost">Exportar CSV</button><button id="print-btn" class="btn btn-primary">Imprimir relatório</button></div></div>
+          <div id="report-kpis" class="kpi-grid"></div>
+          <article class="panel"><div class="panel-title"><h3>Checagem de vínculos</h3><span>Regra: Jender + somente um federal</span></div><div class="table-wrap flat"><table><thead><tr><th>Sublíder</th><th>Jender</th><th>Federal</th><th>Apoiadores</th><th>Resultado</th></tr></thead><tbody id="checks-table"></tbody></table></div></article>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <dialog id="leader-dialog"><form id="leader-form" method="dialog" class="modal-form"><div class="modal-head"><div><p class="eyebrow">CADASTRO</p><h3>Novo sublíder</h3></div><button class="icon-button close-dialog" type="button">×</button></div><div class="form-grid"><label class="span-2">Nome completo<input name="nome" required></label><label>Telefone<input name="telefone" inputmode="tel"></label><label>Bairro<input name="bairro"></label><label>Zona eleitoral<input name="zona_eleitoral"></label><label>Seção<input name="secao_eleitoral"></label></div><fieldset><legend>Candidatos atendidos</legend><label class="check-option"><input type="checkbox" name="jender"> Jender Lobato — 36123</label><p class="form-help">Se marcar Jender, escolha obrigatoriamente um federal.</p><div class="radio-row"><label class="check-option"><input type="radio" name="federal" value="7012"> Dalmir Salazar — 7012</label><label class="check-option"><input type="radio" name="federal" value="5522"> Pauderney Avelino — 5522</label><label class="check-option"><input type="radio" name="federal" value=""> Nenhum</label></div></fieldset><label>Observações<textarea name="observacoes" rows="3"></textarea></label><div class="modal-actions"><button type="button" class="btn btn-ghost close-dialog">Cancelar</button><button type="submit" class="btn btn-primary">Salvar sublíder</button></div></form></dialog>
+
+  <dialog id="supporter-dialog"><form id="supporter-form" method="dialog" class="modal-form"><div class="modal-head"><div><p class="eyebrow">CADASTRO</p><h3>Novo apoiador</h3></div><button class="icon-button close-dialog" type="button">×</button></div><div class="form-grid"><label class="span-2">Nome completo<input name="nome" required></label><label>Sublíder responsável<select name="sublider_id" id="supporter-leader" required></select></label><label>Telefone<input name="telefone" inputmode="tel"></label><label>Bairro<input name="bairro"></label><label>Situação<select name="situacao"><option value="confirmado">Confirmado</option><option value="provavel" selected>Provável</option><option value="indeciso">Indeciso</option><option value="recusado">Não apoia</option></select></label></div><fieldset><legend>Intenção de apoio</legend><label class="check-option"><input type="checkbox" name="jender"> Jender Lobato — 36123</label><div class="radio-row"><label class="check-option"><input type="radio" name="federal" value="7012"> Dalmir — 7012</label><label class="check-option"><input type="radio" name="federal" value="5522"> Pauderney — 5522</label><label class="check-option"><input type="radio" name="federal" value=""> Nenhum</label></div></fieldset><label>Observações<textarea name="observacoes" rows="3"></textarea></label><div class="modal-actions"><button type="button" class="btn btn-ghost close-dialog">Cancelar</button><button type="submit" class="btn btn-primary">Salvar apoiador</button></div></form></dialog>
+
+  <dialog id="movement-dialog"><form id="movement-form" method="dialog" class="modal-form"><div class="modal-head"><div><p class="eyebrow">AGENDA</p><h3>Nova movimentação</h3></div><button class="icon-button close-dialog" type="button">×</button></div><div class="form-grid"><label>Data<input name="data_movimentacao" type="date" required></label><label>Tipo<select name="tipo"><option value="visita">Visita</option><option value="reuniao">Reunião</option><option value="ligacao">Ligação</option><option value="evento">Evento</option><option value="cadastro">Cadastro</option><option value="outra">Outra</option></select></label><label>Sublíder<select name="sublider_id" id="movement-leader"><option value="">Sem sublíder</option></select></label><label>Candidato<select name="candidato_id" id="movement-candidate"><option value="">Todos / coordenação</option></select></label><label class="span-2">Local<input name="local"></label><label class="span-2">Descrição<textarea name="descricao" rows="3" required></textarea></label><label>Status<select name="status"><option value="planejada">Planejada</option><option value="realizada">Realizada</option><option value="cancelada">Cancelada</option></select></label><label>Quantidade alcançada<input name="quantidade" type="number" min="0" value="0"></label></div><div class="modal-actions"><button type="button" class="btn btn-ghost close-dialog">Cancelar</button><button type="submit" class="btn btn-primary">Salvar movimentação</button></div></form></dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.9/dist/chart.umd.min.js"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
